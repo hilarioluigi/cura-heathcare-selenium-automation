@@ -1,4 +1,4 @@
-name: Selenium Test Suite
+name: Selenium Demo-Cura Automation Tests
 on:
   push:
     branches: [main]
