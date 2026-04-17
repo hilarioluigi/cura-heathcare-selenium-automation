@@ -1,0 +1,8 @@
+<suite name="Regression Testing" verbose="1">
+    <test name="Regression Tests">
+        <classes>
+            <class name="LoginTest"/>
+            <class name="MakeAppointmentTest"/>
+        </classes>
+    </test>
+</suite>
