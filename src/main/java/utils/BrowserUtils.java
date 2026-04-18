@@ -13,6 +13,10 @@ public class BrowserUtils {
         prefs.put("profile.password_manager_leak_detection", false);
         options.setExperimentalOption("prefs", prefs);
 
+        if ("true".equals(System.getProperty("headless"))){
+            options.addArguments("--headless=new");
+        }
+
         return new ChromeDriver(options);
     }
 }
