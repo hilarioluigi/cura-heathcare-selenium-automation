@@ -19,4 +19,4 @@ jobs:
           cache: maven
 
       - name: Run tests
-        run: mvn clean test -Dheadles=true
+        run: mvn clean test -Dheadless=true
