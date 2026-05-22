@@ -35,7 +35,7 @@ or ```ElementNotInteractableException``` errors.
 ### **Project Setup**
 1. Clone the repository
     ```bash
-    git clone https://github.com/yourusername/CuraHealthcareSeleniumProject.git
+    git clone https://github.com/hilarioluigi/cura-heathcare-selenium-automation.git
     cd CuraHealthcareSeleniumProject
 2. Verify your environment
     ```bash
