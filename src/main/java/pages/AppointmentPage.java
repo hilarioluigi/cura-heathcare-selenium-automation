@@ -26,7 +26,7 @@ public class AppointmentPage extends WaitAction {
 
     LocalDate expectedDate = LocalDate.now().plusMonths(14);
     DateTimeFormatter monthYearFormatter = DateTimeFormatter.ofPattern("MMMM yyyy");
-    DateTimeFormatter dayFormatter = DateTimeFormatter.ofPattern("dd");
+    DateTimeFormatter dayFormatter = DateTimeFormatter.ofPattern("d");
     String expectedMonthYear = expectedDate.format(monthYearFormatter);
     String expectedDay = expectedDate.format(dayFormatter);
 
