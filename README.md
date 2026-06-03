@@ -44,6 +44,9 @@ or ```ElementNotInteractableException``` errors.
 3. Install project dependencies
     ```bash
     mvn clean install -DskipTests
+4. Create the screenshot directories
+    ```bash
+   mkdir -p src/test/resources/screenshots
 
 ## 🚀 Running the Automation
 You can trigger the test suite directly from the terminal. 
