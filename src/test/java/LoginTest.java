@@ -1,12 +1,18 @@
 import actionDriver.Action;
+import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.ITestResult;
 import org.testng.annotations.*;
 import pages.AppointmentPage;
 import pages.HomePage;
 import pages.LoginPage;
 import utils.BrowserUtils;
+import org.openqa.selenium.io.FileHandler;
 
+import java.io.File;
+import java.io.IOException;
+import java.time.LocalDateTime;
 
 public class LoginTest {
     ChromeDriver driver;
@@ -19,6 +25,7 @@ public class LoginTest {
     static String validPassword = "ThisIsNotAPassword";
     String invalidUserName = "Fake John";
     String invalidPassword = "FakePass";
+    LocalDateTime localDateTime = LocalDateTime.now();
 
     @BeforeClass
     public void setup(){
@@ -31,6 +38,12 @@ public class LoginTest {
         action.maximize();
         action.openWeb();
         homePage.clickMakeAppointment();
+    }
+
+    @AfterMethod
+    public void afterMethod(ITestResult result) throws IOException {
+        File screenShot = driver.getScreenshotAs(OutputType.FILE);
+        FileHandler.copy(screenShot, new File("./src/test/resources/screenshots/" + result.getName() + System.currentTimeMillis() + ".jpg"));
     }
 
     @AfterClass

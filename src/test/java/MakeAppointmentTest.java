@@ -1,8 +1,14 @@
 import actionDriver.Action;
+import org.openqa.selenium.OutputType;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.io.FileHandler;
+import org.testng.ITestResult;
 import org.testng.annotations.*;
 import pages.*;
 import utils.BrowserUtils;
+
+import java.io.File;
+import java.io.IOException;
 
 public class MakeAppointmentTest {
     ChromeDriver driver;
@@ -30,6 +36,12 @@ public class MakeAppointmentTest {
         loginPage.enterUsername(LoginTest.validUsername);
         loginPage.enterPassword(LoginTest.validPassword);
         loginPage.clickLogin();
+    }
+
+    @AfterMethod
+    public void afterMethod(ITestResult result) throws IOException {
+        File screenShot = driver.getScreenshotAs(OutputType.FILE);
+        FileHandler.copy(screenShot, new File("./src/test/resources/screenshots/" + result.getName() + System.currentTimeMillis() + ".jpg"));
     }
 
     @AfterClass
