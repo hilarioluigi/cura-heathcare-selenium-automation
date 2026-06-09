@@ -8,6 +8,7 @@ public class LoginPage extends WaitAction {
     By username = By.xpath("//input[@name='username']");
     By password = By.xpath("//input[@name='password']");
     By login = By.id("btn-login");
+    By errorMsg = By.xpath("//p[@class='lead text-danger']");
 
     public LoginPage(WebDriver driver) {
        super(driver);
@@ -23,5 +24,9 @@ public class LoginPage extends WaitAction {
 
     public void clickLogin() {
         click(login);
+    }
+
+    public String assertErrorMsg() {
+        return getText(errorMsg);
     }
 }

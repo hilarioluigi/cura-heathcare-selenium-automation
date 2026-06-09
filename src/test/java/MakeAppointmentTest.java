@@ -1,7 +1,10 @@
 import actionDriver.Action;
+import actionDriver.WaitAction;
 import org.openqa.selenium.OutputType;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.io.FileHandler;
+import org.testng.Assert;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
 import pages.*;
@@ -13,6 +16,7 @@ import java.io.IOException;
 public class MakeAppointmentTest {
     ChromeDriver driver;
     Action action;
+    WaitAction waitAction;
 
     HomePage homePage;
     LoginPage loginPage;
@@ -20,10 +24,14 @@ public class MakeAppointmentTest {
     AppointmentSummaryPage appointmentSummaryPage;
     HistoryPage historyPage;
 
+    String currentUrl;
+    String expectedValidationMsg = "Please fill out this field.";
+
     @BeforeClass
     public void setup() {
         driver = BrowserUtils.createChromeDriver();
         action = new Action(driver);
+        waitAction = new WaitAction(driver);
         homePage = new HomePage(driver);
         loginPage = new LoginPage(driver);
         appointmentPage  = new AppointmentPage(driver);
@@ -57,7 +65,12 @@ public class MakeAppointmentTest {
         appointmentPage.selectHealthcareProgram();
         appointmentPage.chooseDate();
         appointmentPage.enterComment();
+        currentUrl = driver.getCurrentUrl();
         appointmentPage.clickBookAppointment();
+        waitAction.waitUrlChanges(currentUrl);
+        currentUrl = driver.getCurrentUrl();
+        Assert.assertNotNull(currentUrl);
+        Assert.assertTrue(currentUrl.contains("/appointment.php#summary"));
         appointmentSummaryPage.clickGoToHomepage();
     }
 
@@ -68,14 +81,24 @@ public class MakeAppointmentTest {
         appointmentPage.selectHealthcareProgram();
         appointmentPage.chooseDate();
         appointmentPage.enterComment();
+        currentUrl = driver.getCurrentUrl();
         appointmentPage.clickBookAppointment();
+        waitAction.waitUrlChanges(currentUrl);
+        currentUrl = driver.getCurrentUrl();
+        Assert.assertNotNull(currentUrl);
+        Assert.assertTrue(currentUrl.contains("/appointment.php#summary"));
         appointmentSummaryPage.clickGoToHomepage();
     }
 
     @Test (priority = 2)
     public void checkBookHistory() {
         appointmentPage.openMenu();
+        currentUrl = driver.getCurrentUrl();
         appointmentPage.clickHistory();
+        waitAction.waitUrlChanges(currentUrl);
+        currentUrl = driver.getCurrentUrl();
+        Assert.assertNotNull(currentUrl);
+        Assert.assertTrue(currentUrl.contains("/history.php#history"));
         historyPage.clickGoToHomepage();
     }
 
@@ -87,5 +110,7 @@ public class MakeAppointmentTest {
         appointmentPage.selectHealthcareProgram();
         appointmentPage.enterComment();
         appointmentPage.clickBookAppointment();
+        WebElement dateVisitField = driver.findElement(appointmentPage.dateVisit);
+        Assert.assertEquals(action.getValidationMessage(dateVisitField), expectedValidationMsg);
     }
 }

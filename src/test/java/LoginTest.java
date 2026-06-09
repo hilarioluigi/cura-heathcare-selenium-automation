@@ -1,9 +1,12 @@
 import actionDriver.Action;
+import actionDriver.WaitAction;
+import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
+import org.testng.Assert;
 import pages.AppointmentPage;
 import pages.HomePage;
 import pages.LoginPage;
@@ -17,6 +20,7 @@ import java.time.LocalDateTime;
 public class LoginTest {
     ChromeDriver driver;
     Action action;
+    WaitAction waitAction;
     HomePage homePage;
     LoginPage loginPage;
     AppointmentPage appointmentPage;
@@ -25,12 +29,15 @@ public class LoginTest {
     static String validPassword = "ThisIsNotAPassword";
     String invalidUserName = "Fake John";
     String invalidPassword = "FakePass";
-    LocalDateTime localDateTime = LocalDateTime.now();
+    String actualErrorMsg;
+    String currentUrl;
+    String expectedErrorMsg = "Login failed! Please ensure the username and password are valid.";
 
     @BeforeClass
     public void setup(){
         driver = BrowserUtils.createChromeDriver();
         action = new Action(driver);
+        waitAction = new WaitAction(driver);
         homePage = new HomePage(driver);
         loginPage = new LoginPage(driver);
         appointmentPage = new AppointmentPage(driver);
@@ -57,6 +64,8 @@ public class LoginTest {
         loginPage.enterUsername("");
         loginPage.enterPassword("");
         loginPage.clickLogin();
+        actualErrorMsg = loginPage.assertErrorMsg();
+        Assert.assertEquals(actualErrorMsg,expectedErrorMsg);
     }
 
     @Test (priority = 1)
@@ -64,6 +73,8 @@ public class LoginTest {
         loginPage.enterUsername("");
         loginPage.enterPassword(validPassword);
         loginPage.clickLogin();
+        actualErrorMsg = loginPage.assertErrorMsg();
+        Assert.assertEquals(actualErrorMsg, expectedErrorMsg);
     }
 
     @Test (priority = 2)
@@ -71,6 +82,8 @@ public class LoginTest {
         loginPage.enterUsername(validUsername);
         loginPage.enterPassword("");
         loginPage.clickLogin();
+        actualErrorMsg = loginPage.assertErrorMsg();
+        Assert.assertEquals(actualErrorMsg, expectedErrorMsg);
     }
 
     @Test (priority = 3)
@@ -78,6 +91,8 @@ public class LoginTest {
         loginPage.enterUsername(invalidUserName);
         loginPage.enterPassword(invalidPassword);
         loginPage.clickLogin();
+        actualErrorMsg = loginPage.assertErrorMsg();
+        Assert.assertEquals(actualErrorMsg, expectedErrorMsg);
     }
 
     @Test (priority = 4)
@@ -85,6 +100,8 @@ public class LoginTest {
         loginPage.enterUsername(invalidUserName);
         loginPage.enterPassword(validPassword);
         loginPage.clickLogin();
+        actualErrorMsg = loginPage.assertErrorMsg();
+        Assert.assertEquals(actualErrorMsg, expectedErrorMsg);
     }
 
     @Test (priority = 5)
@@ -92,18 +109,30 @@ public class LoginTest {
         loginPage.enterUsername(validUsername);
         loginPage.enterPassword(invalidPassword);
         loginPage.clickLogin();
+        actualErrorMsg = loginPage.assertErrorMsg();
+        Assert.assertEquals(actualErrorMsg, expectedErrorMsg);
     }
 
     @Test (priority = 6)
-    public void loginValid() {
+    public void loginValid(){
         loginPage.enterUsername(validUsername);
         loginPage.enterPassword(validPassword);
+        currentUrl = driver.getCurrentUrl();
         loginPage.clickLogin();
+        waitAction.waitUrlChanges(currentUrl);
+        currentUrl = driver.getCurrentUrl();
+        Assert.assertNotNull(currentUrl);
+        Assert.assertTrue(currentUrl.contains("/#appointment"));
     }
 
     @Test (priority = 7)
     public void logout() {
         appointmentPage.openMenu();
+        currentUrl = driver.getCurrentUrl();
         appointmentPage.clickLogout();
+        waitAction.waitUrlChanges(currentUrl);
+        currentUrl = driver.getCurrentUrl();
+        Assert.assertNotNull(currentUrl);
+        Assert.assertEquals(currentUrl, "https://katalon-demo-cura.herokuapp.com/");
     }
 }

@@ -3,6 +3,7 @@ package pages;
 import actionDriver.WaitAction;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
@@ -18,7 +19,7 @@ public class AppointmentPage extends WaitAction {
     public By facilitySeoulFacilityOpt = By.xpath("//option[@value='Seoul CURA Healthcare Center']");
     By checkReadmission = By.id("chk_hospotal_readmission");
     By optionMedicareProgram = By.xpath("//input[@value='Medicare']");
-    By dateVisit = By.id("txt_visit_date");
+    public By dateVisit = By.id("txt_visit_date");
     By monthYearCalender = By.xpath("//div[@class='datepicker-days']//th[@class='datepicker-switch']");
     By nextMonthButton = By.xpath("//div[@class='datepicker-days']//th[@class='next']");
     By areaComment = By.id("txt_comment");

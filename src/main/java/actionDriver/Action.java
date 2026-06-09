@@ -1,6 +1,8 @@
 package actionDriver;
 
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
 public class Action {
     WebDriver driver;
@@ -20,5 +22,10 @@ public class Action {
 
     public void quit() {
         driver.quit();
+    }
+
+    public String getValidationMessage(WebElement element)
+    {
+        return (String) ((JavascriptExecutor) driver).executeScript("return arguments[0].validationMessage;", element);
     }
 }

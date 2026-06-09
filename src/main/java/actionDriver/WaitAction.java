@@ -29,4 +29,8 @@ public class WaitAction {
     public String getText(By locator) {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(locator)).getText();
     }
+
+    public void waitUrlChanges(String url){
+        wait.until(ExpectedConditions.not(ExpectedConditions.urlToBe(url)));
+    }
 }
