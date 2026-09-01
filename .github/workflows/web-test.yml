@@ -19,7 +19,7 @@ jobs:
           cache: maven
 
       - name: Setup directory
-        run: mkdir -p src/test/resources/screenshots
+        run: mkdir -p src/test/java/resources/screenshots
 
       - name: Run tests
         run: mvn clean test -Dheadless=true
