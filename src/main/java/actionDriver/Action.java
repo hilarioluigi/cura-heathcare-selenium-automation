@@ -1,15 +1,33 @@
 package actionDriver;
 
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
 
 public class Action {
     WebDriver driver;
+    WebDriverWait wait;
     String webUrl = "https://katalon-demo-cura.herokuapp.com/";
 
     public Action(WebDriver driver) {
         this.driver = driver;
+    }
+
+    public WebElement waitForClickable(By locator, int waitDuration) {
+        wait = new WebDriverWait(driver, Duration.ofSeconds(waitDuration));
+        return wait.until(ExpectedConditions.elementToBeClickable(locator));
+    }
+
+    public WebElement waitForVisibility(By locator, int waitDuration) {
+        wait = new WebDriverWait(driver, Duration.ofSeconds(waitDuration));
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+    }
+
+    public void waitUrlChanges(String url, int waitDuration){
+        wait = new WebDriverWait(driver, Duration.ofSeconds(waitDuration));
+        wait.until(ExpectedConditions.not(ExpectedConditions.urlToBe(url)));
     }
 
     public void openWeb() {

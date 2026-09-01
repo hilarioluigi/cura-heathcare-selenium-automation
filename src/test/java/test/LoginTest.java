@@ -1,8 +1,7 @@
+package test;
+
 import actionDriver.Action;
-import actionDriver.WaitAction;
-import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
@@ -15,12 +14,10 @@ import org.openqa.selenium.io.FileHandler;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDateTime;
 
 public class LoginTest {
     ChromeDriver driver;
     Action action;
-    WaitAction waitAction;
     HomePage homePage;
     LoginPage loginPage;
     AppointmentPage appointmentPage;
@@ -37,7 +34,6 @@ public class LoginTest {
     public void setup(){
         driver = BrowserUtils.createChromeDriver();
         action = new Action(driver);
-        waitAction = new WaitAction(driver);
         homePage = new HomePage(driver);
         loginPage = new LoginPage(driver);
         appointmentPage = new AppointmentPage(driver);
@@ -50,7 +46,7 @@ public class LoginTest {
     @AfterMethod
     public void afterMethod(ITestResult result) throws IOException {
         File screenShot = driver.getScreenshotAs(OutputType.FILE);
-        FileHandler.copy(screenShot, new File("./src/test/resources/screenshots/" + result.getName() + System.currentTimeMillis() + ".jpg"));
+        FileHandler.copy(screenShot, new File("./src/test/java/resources/screenshots/" + result.getName() + System.currentTimeMillis() + ".jpg"));
     }
 
     @AfterClass
@@ -119,7 +115,7 @@ public class LoginTest {
         loginPage.enterPassword(validPassword);
         currentUrl = driver.getCurrentUrl();
         loginPage.clickLogin();
-        waitAction.waitUrlChanges(currentUrl);
+        action.waitUrlChanges(currentUrl, 15);
         currentUrl = driver.getCurrentUrl();
         Assert.assertNotNull(currentUrl);
         Assert.assertTrue(currentUrl.contains("/#appointment"));
@@ -130,7 +126,7 @@ public class LoginTest {
         appointmentPage.openMenu();
         currentUrl = driver.getCurrentUrl();
         appointmentPage.clickLogout();
-        waitAction.waitUrlChanges(currentUrl);
+        action.waitUrlChanges(currentUrl, 15);
         currentUrl = driver.getCurrentUrl();
         Assert.assertNotNull(currentUrl);
         Assert.assertEquals(currentUrl, "https://katalon-demo-cura.herokuapp.com/");

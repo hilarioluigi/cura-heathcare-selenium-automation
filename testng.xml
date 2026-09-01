@@ -1,8 +1,11 @@
 <suite name="Regression Testing" verbose="1">
+    <listeners>
+        <listener class-name="listeners.RetryListener"/>
+    </listeners>
     <test name="Regression Tests">
         <classes>
-            <class name="LoginTest"/>
-            <class name="MakeAppointmentTest"/>
+            <class name="test.LoginTest"/>
+            <class name="test.MakeAppointmentTest"/>
         </classes>
     </test>
 </suite>

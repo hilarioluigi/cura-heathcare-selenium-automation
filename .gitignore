@@ -39,4 +39,4 @@ build/
 .DS_Store
 
 ### Screenshots files ###
-src/test/resources/*.jpg
+src/test/java/resources/screenshots/*.jpg

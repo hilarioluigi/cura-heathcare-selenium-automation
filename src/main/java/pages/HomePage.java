@@ -1,10 +1,10 @@
 package pages;
 
-import actionDriver.WaitAction;
+import actionDriver.Action;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
-public class HomePage extends WaitAction {
+public class HomePage extends Action {
     By makeAppointment = By.id("btn-make-appointment");
 
     public HomePage(WebDriver driver) {
@@ -12,6 +12,6 @@ public class HomePage extends WaitAction {
     }
 
     public void clickMakeAppointment() {
-        click(makeAppointment);
+        waitForClickable(makeAppointment, 15).click();
     }
 }

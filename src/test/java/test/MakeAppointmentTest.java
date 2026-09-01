@@ -1,5 +1,6 @@
+package test;
+
 import actionDriver.Action;
-import actionDriver.WaitAction;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -16,7 +17,6 @@ import java.io.IOException;
 public class MakeAppointmentTest {
     ChromeDriver driver;
     Action action;
-    WaitAction waitAction;
 
     HomePage homePage;
     LoginPage loginPage;
@@ -27,11 +27,14 @@ public class MakeAppointmentTest {
     String currentUrl;
     String expectedValidationMsg = "Please fill out this field.";
 
+    String facilityTokyoFacilityOpt = "Tokyo CURA Healthcare Center";
+    String facilityHongkongFacilityOpt = "Hongkong CURA Healthcare Center";
+    String facilitySeoulFacilityOpt = "Seoul CURA Healthcare Center";
+
     @BeforeClass
     public void setup() {
         driver = BrowserUtils.createChromeDriver();
         action = new Action(driver);
-        waitAction = new WaitAction(driver);
         homePage = new HomePage(driver);
         loginPage = new LoginPage(driver);
         appointmentPage  = new AppointmentPage(driver);
@@ -49,7 +52,7 @@ public class MakeAppointmentTest {
     @AfterMethod
     public void afterMethod(ITestResult result) throws IOException {
         File screenShot = driver.getScreenshotAs(OutputType.FILE);
-        FileHandler.copy(screenShot, new File("./src/test/resources/screenshots/" + result.getName() + System.currentTimeMillis() + ".jpg"));
+        FileHandler.copy(screenShot, new File("./src/test/java/resources/screenshots/" + result.getName() + System.currentTimeMillis() + ".jpg"));
     }
 
     @AfterClass
@@ -59,15 +62,16 @@ public class MakeAppointmentTest {
     }
 
     @Test
-    public void bookValid() {
-        appointmentPage.selectFacility(appointmentPage.facilityTokyoFacilityOpt);
+    public void bookValid(){
+        appointmentPage.selectFacility(facilityTokyoFacilityOpt);
         appointmentPage.selectHospitalReadmission();
         appointmentPage.selectHealthcareProgram();
+        appointmentPage.clickVisitDate();
         appointmentPage.chooseDate();
         appointmentPage.enterComment();
         currentUrl = driver.getCurrentUrl();
         appointmentPage.clickBookAppointment();
-        waitAction.waitUrlChanges(currentUrl);
+        action.waitUrlChanges(currentUrl, 15);
         currentUrl = driver.getCurrentUrl();
         Assert.assertNotNull(currentUrl);
         Assert.assertTrue(currentUrl.contains("/appointment.php#summary"));
@@ -75,15 +79,16 @@ public class MakeAppointmentTest {
     }
 
     @Test (priority = 1)
-    public void bookWithoutReadmission() {
+    public void bookWithoutReadmission(){
         homePage.clickMakeAppointment();
-        appointmentPage.selectFacility(appointmentPage.facilityHongkongFacilityOpt);
+        appointmentPage.selectFacility(facilityHongkongFacilityOpt);
         appointmentPage.selectHealthcareProgram();
+        appointmentPage.clickVisitDate();
         appointmentPage.chooseDate();
         appointmentPage.enterComment();
         currentUrl = driver.getCurrentUrl();
         appointmentPage.clickBookAppointment();
-        waitAction.waitUrlChanges(currentUrl);
+        action.waitUrlChanges(currentUrl, 15);
         currentUrl = driver.getCurrentUrl();
         Assert.assertNotNull(currentUrl);
         Assert.assertTrue(currentUrl.contains("/appointment.php#summary"));
@@ -95,7 +100,7 @@ public class MakeAppointmentTest {
         appointmentPage.openMenu();
         currentUrl = driver.getCurrentUrl();
         appointmentPage.clickHistory();
-        waitAction.waitUrlChanges(currentUrl);
+        action.waitUrlChanges(currentUrl, 15);
         currentUrl = driver.getCurrentUrl();
         Assert.assertNotNull(currentUrl);
         Assert.assertTrue(currentUrl.contains("/history.php#history"));
@@ -105,7 +110,7 @@ public class MakeAppointmentTest {
     @Test (priority = 3)
     public void bookEmptyDate() {
         homePage.clickMakeAppointment();
-        appointmentPage.selectFacility(appointmentPage.facilitySeoulFacilityOpt);
+        appointmentPage.selectFacility(facilitySeoulFacilityOpt);
         appointmentPage.selectHospitalReadmission();
         appointmentPage.selectHealthcareProgram();
         appointmentPage.enterComment();

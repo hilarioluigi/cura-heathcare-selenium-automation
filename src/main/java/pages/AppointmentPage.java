@@ -1,26 +1,25 @@
 package pages;
 
-import actionDriver.WaitAction;
+import actionDriver.Action;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.time.LocalDate;
 
-public class AppointmentPage extends WaitAction {
+public class AppointmentPage extends Action {
     By menu = By.id("menu-toggle");
     By history = By.linkText("History");
     By logout = By.linkText("Logout");
-    By comboFacility = By.id("combo_facility");
-    public By facilityTokyoFacilityOpt = By.xpath("//option[@value='Tokyo CURA Healthcare Center']");
-    public By facilityHongkongFacilityOpt = By.xpath("//option[@value='Tokyo CURA Healthcare Center']");
-    public By facilitySeoulFacilityOpt = By.xpath("//option[@value='Seoul CURA Healthcare Center']");
+
     By checkReadmission = By.id("chk_hospotal_readmission");
     By optionMedicareProgram = By.xpath("//input[@value='Medicare']");
     public By dateVisit = By.id("txt_visit_date");
-    By monthYearCalender = By.xpath("//div[@class='datepicker-days']//th[@class='datepicker-switch']");
+    By calender = By.className("datepicker-days");
+    By monthYearCalender = By.xpath("//div[@class='datepicker-days']//th[@class='datepicker-switch' and text()]");
     By nextMonthButton = By.xpath("//div[@class='datepicker-days']//th[@class='next']");
     By areaComment = By.id("txt_comment");
     By buttonBookAppointment = By.id("btn-book-appointment");
@@ -28,6 +27,7 @@ public class AppointmentPage extends WaitAction {
     LocalDate expectedDate = LocalDate.now().plusMonths(14);
     DateTimeFormatter monthYearFormatter = DateTimeFormatter.ofPattern("MMMM yyyy");
     DateTimeFormatter dayFormatter = DateTimeFormatter.ofPattern("d");
+    String currentMonthYearCalender;
     String expectedMonthYear = expectedDate.format(monthYearFormatter);
     String expectedDay = expectedDate.format(dayFormatter);
 
@@ -41,45 +41,59 @@ public class AppointmentPage extends WaitAction {
     }
 
     public void openMenu() {
-        click(menu);
+        waitForClickable(menu, 15).click();
     }
 
     public void clickLogout() {
-        click(logout);
+        waitForClickable(logout, 15).click();
     }
 
     public void clickHistory() {
-        click(history);
+        waitForClickable(history, 15).click();
     }
 
-    public void selectFacility(By facility) {
-        click(comboFacility);
-        click(facility);
+    public void selectFacility(String facilityText) {
+        By comboFacility = By.id("combo_facility");
+        WebElement dropDownFacility = waitForVisibility(comboFacility, 15);
+        Select facilityOption = new Select(dropDownFacility);
+
+        waitForClickable(comboFacility,15);
+        facilityOption.selectByVisibleText(facilityText);
     }
 
     public void selectHospitalReadmission() {
-        click(checkReadmission);
+        waitForClickable(checkReadmission, 15).click();
     }
 
     public void selectHealthcareProgram() {
-        click(optionMedicareProgram);
+        waitForClickable(optionMedicareProgram, 15).click();
+    }
+
+    public void clickVisitDate() {
+        waitForClickable(dateVisit, 15).click();
     }
 
     public void chooseDate() {
-        click(dateVisit);
-        String currentMonthYearCalender = getText(monthYearCalender);
+        waitForVisibility(calender, 15);
+        currentMonthYearCalender = waitForVisibility(monthYearCalender, 20).getText();
+        //log
+        int counter = 0;
         while(!Objects.equals(currentMonthYearCalender, expectedMonthYear)) {
-            click(nextMonthButton);
-            currentMonthYearCalender = getText(monthYearCalender);
+            waitForClickable(nextMonthButton, 15).click();
+            waitForVisibility(calender, 15);
+            currentMonthYearCalender = waitForVisibility(monthYearCalender, 20).getText();
+            //log
+            System.out.println("Loop date checked " + counter);
+            counter++;
         }
-        click(dayCalender);
+        waitForClickable(dayCalender, 15).click();
     }
 
     public void enterComment() {
-        inputText(areaComment, comment);
+        waitForClickable(areaComment, 15).sendKeys(comment);
     }
 
     public void clickBookAppointment() {
-        click(buttonBookAppointment);
+        waitForClickable(buttonBookAppointment, 15).click();
     }
 }
